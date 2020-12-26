@@ -23,12 +23,29 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
          
   has_many :articles, dependent: :destroy
+  has_one :profile, dependent: :destroy
+
+  delegate :birthday, :age, :gender, to: :profile, allow_nil: true
 
   def has_witten?(article)
     articles.exists?(id: article.id)
   end
 
   def disp_name
-    self.email.split('@').first
+    #ぼっち演算子 &. プロフィールがnillじゃないときだけニックネーム表示
+    profile&.nickname || self.email.split('@').first
+  end
+
+  def avatar_image
+    if profile&.avatar&.attached?
+      profile.avatar
+    else
+      'default-avatar.png'
+    end
+  end
+
+
+  def prepare_profile
+    profile || build_profile
   end
 end
