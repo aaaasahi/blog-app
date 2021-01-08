@@ -23,12 +23,19 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
          
   has_many :articles, dependent: :destroy
+  has_many :likes, dependent: :destroy
+  has_many :favorite_articles, through: :likes, source: :article
   has_one :profile, dependent: :destroy
 
   delegate :birthday, :age, :gender, to: :profile, allow_nil: true
 
   def has_witten?(article)
     articles.exists?(id: article.id)
+  end
+
+  #いいねしていたらlikesテーブルにarticle_idが存在しているため
+  def has_liked?(article)
+    likes.exists?(article_id: article.id)
   end
 
   def disp_name
