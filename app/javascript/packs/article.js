@@ -7,14 +7,11 @@ const handleHeartDisplay = (hasLiked) => {
 }
 
 import $ from 'jquery'
-import axios from 'axios'
-import { csrfToken } from 'rails-ujs'
 import {
     listenInactiveHeartEvent,
     listenActiveHeartEvent
 } from 'modules/handle_heart'
-
-axios.defaults.headers.common['X-CSRF-Token'] = csrfToken()
+import axios from 'modules/axios'
 
 const handleCommentForm = () => {
     $('.show-comment-form').on('click', () => {
